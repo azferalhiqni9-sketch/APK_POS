@@ -1,14 +1,27 @@
 <?php
 
 namespace App\Providers;
-
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider AS ServiceProvider;
+use Illuminate\Pagination\Paginator;
+use Carbon\Carbon;
+use App\Models\User;
+use App\Policies\DashboardPolicy;
+use App\Models\Penjualan;
+use App\Policies\PenjualanPolicy;
+use App\Models\Produk;
+use App\Models\ItemPenjualan;
+use App\Policies\ItemPenjualanPolicy;
+use App\Policies\ProdukPolicy;
+use Nette\Utils\Paginator as UtilsPaginator;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
+  protected $policies = [
+    User::class  => DashboardPolicy::class,
+    Produk::class => ProdukPolicy::class,
+    Penjualan::class => PenjualanPolicy::class,
+   ItemPenjualan::class => ItemPenjualanPolicy::class 
+];
     public function register(): void
     {
         //
@@ -19,6 +32,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Paginator::useBootstrapFive();
+        Carbon::setLocale('id');
+        $this->registerPolicies();
+
     }
 }

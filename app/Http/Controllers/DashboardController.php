@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\LaporanPenjualanService;
 use App\Services\MonitoringStokService;
 use Illuminate\Support\Carbon;
 
-
 class DashboardController extends Controller
 {
     public function __construct(
         protected LaporanPenjualanService $laporanService,
-        protected MonitoringStokService $stokService  
+        protected MonitoringStokService $stokService
     ) {}
 
     public function index()
@@ -21,11 +19,11 @@ class DashboardController extends Controller
         $ringkasan = $this->laporanService->ringkasanHariIni();
 
         return view('dashboard', [
-                'tanggalHariIni' => Carbon::now(),
-                'ringkasan' => $ringkasan,
-                'produkTerlaris' => $this->laporanService->produkTerlarisHariIni(),
-                'produkStokRendah' => $this->stokService->produkStokRendah(),
-                'produkStokHabis' => $this->stokService->produkStokHabis(),
+            'ringkasan' => $ringkasan,
+            'produkStokRendah' => $this->stokService->produkStokRendah(),
+            'produkStokHabis' => $this->stokService->produkStokHabis(),
+            'tanggalHariIni' =>  Carbon::now(),
+            'produkTerlaris' => $this->laporanService->produkTerlarisHariIni(), 
         ]);
     }
 }
