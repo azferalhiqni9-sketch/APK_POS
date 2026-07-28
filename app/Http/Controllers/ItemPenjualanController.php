@@ -37,9 +37,15 @@ class ItemPenjualanController extends Controller
             'quantity' => 'required|integer|min:1'
         ]);
 
+        // Cari transaksi OPEN milik user, jika tidak ada (sedang edit transaksi lama), ambil transaksi terakhir milik user
         $sale = Penjualan::where('user_id', Auth::id())
             ->where('status', 'OPEN')
-            ->firstOrFail();
+            ->latest()
+            ->first();
+
+        if (!$sale) {
+            $sale = Penjualan::where('user_id', Auth::id())->latest()->firstOrFail();
+        }
 
         $product = Produk::findOrFail($request->product_id);
 
