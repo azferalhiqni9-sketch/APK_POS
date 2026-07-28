@@ -83,9 +83,13 @@ class PenjualanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Penjualan $penjualan)
     {
-        //
+        $sale = $penjualan;
+        
+        $sale->load('itemPenjualan.produk', 'user');
+
+        return view('penjualan.show', compact('sale'));
     }
 
     /**
@@ -95,7 +99,7 @@ class PenjualanController extends Controller
     {
         $sale = $penjualan;
 
-        abort_if($sale->status === 'COMPLETED', 403);
+        abort_if(strtoupper($sale->status) === 'COMPLETED', 403);
 
         $sale->load('itemPenjualan');
         $products = Produk::orderBy('nama')->get();
@@ -113,17 +117,16 @@ class PenjualanController extends Controller
             'payment_method' => 'required|in:CASH,QRIS'
         ]);
 
-        if ($penjualan->status !== 'OPEN') {
-            return back()->with('errors', 'Transaksi sudah diproses');
+        if (strtoupper($penjualan->status) !== 'OPEN') {
+            return back()->with('error', 'Transaksi sudah diproses');
         }
 
         if ($penjualan->itemPenjualan()->count() === 0) {
-            return back()->with('errors', 'Keranjang masih kosong');
+            return back()->with('error', 'Keranjang masih kosong');
         }
 
         DB::transaction(function () use ($penjualan, $request) {
 
-            // 🔄 Hitung ulang total (anti manipulasi)
             $total = $penjualan->itemPenjualan()->sum('subtotal');
 
             $penjualan->update([
@@ -145,20 +148,22 @@ class PenjualanController extends Controller
     {
         $this->authorize('delete', $penjualan);
 
-        // Pastikan hanya transaksi OPEN
-        if ($penjualan->status !== 'OPEN') {
-            return redirect()->route('penjualan.index')->with('errors', 'Transaksi sudah selesai tidak bisa dibatalkan');
+        // Pastikan hanya transaksi OPEN yang bisa dihapus
+        if (strtoupper($penjualan->status) !== 'OPEN') {
+            return redirect()->route('penjualan.index')->with('error', 'Transaksi yang sudah selesai (completed) tidak dapat dihapus!');
         }
 
-        // Pastikan milik user login (kasir)
-        if ($penjualan->user_id !== Auth::id()) {
-            return redirect()->route('penjualan.index');
+        // Cek akses: Jika bukan admin DAN bukan pemilik transaksi tersebut, tolak
+        $isAdmin = Auth::user()->role->name === 'admin';
+        $isOwner = $penjualan->user_id === Auth::id();
+
+        if (!$isAdmin && !$isOwner) {
+            return redirect()->route('penjualan.index')->with('error', 'Anda tidak memiliki akses untuk membatalkan transaksi ini');
         }
 
         DB::transaction(function () use ($penjualan) {
 
             foreach ($penjualan->itemPenjualan as $item) {
-
                 $item->produk->increment('stok', $item->kuantitas);
             }
 

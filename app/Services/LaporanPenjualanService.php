@@ -34,7 +34,7 @@ class LaporanPenjualanService
         ->join('penjualan', 'penjualan.id', '=', 'item_penjualan.penjualan_id')
         ->join('produk', 'produk.id', '=', 'item_penjualan.produk_id')
         ->whereDate('penjualan.created_at', Carbon::today())
-        ->groupBy('produk.id', 'produk.nama')
+        ->groupBy('produk.id', 'produk.nama', 'produk.stok')
         ->select(
             'produk.nama',
             'produk.stok',

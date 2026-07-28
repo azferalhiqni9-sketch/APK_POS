@@ -10,6 +10,6 @@ class ItemPenjualanPolicy
     public function delete(User $user, ItemPenjualan $itemPenjualan): bool
     {
         // Izinkan jika user adalah admin, atau kasir yang memiliki transaksi tersebut
-        return $user->role->name === 'admin' || $itemPenjualan->penjualan->user_id === $user->id;
+        return $user->role->name === 'admin';
     }
 }
