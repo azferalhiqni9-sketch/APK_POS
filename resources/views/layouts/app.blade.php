@@ -2,25 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Isi title yang kita kirimkan dari views lain-->
+    <!-- Isi title yang kita kirimkan dari views lain -->
     <title>@yield('title')</title>
-    <!-- memanggil Link bootstraps--> 
-     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- memanggil Link bootstraps --> 
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
 
-<div class="container">
-
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Isi konten yang kita kirimkan dari views lain-->
-     @yield('content')
-
-</div>
+    <!-- Isi konten yang kita kirimkan dari views lain -->
+    @yield('content')
 
 </body>
 </html>

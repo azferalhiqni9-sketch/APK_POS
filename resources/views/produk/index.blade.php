@@ -16,8 +16,8 @@
             <p class="text-muted small mb-0">Kelola daftar produk, stok, dan harga barang di aplikasi POS.</p>
         </div>
         
-        {{-- Tombol Create HANYA untuk ADMIN --}}
-        @if(auth()->check() && auth()->user()->role === 'admin')
+        {{-- Tombol Create HANYA untuk ADMIN (role_id = 1) --}}
+        @if(auth()->check() && auth()->user()->role_id == 1)
             <a href="{{ route('produk.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
                 <i class="bi bi-plus-circle-fill me-1"></i> Create
             </a>
@@ -87,8 +87,8 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                {{-- Pengecekan Akses Aksi --}}
-                                @if(auth()->check() && auth()->user()->role === 'admin')
+                                {{-- Pengecekan Hak Akses Aksi Berdasarkan role_id (1 = Admin) --}}
+                                @if(auth()->check() && auth()->user()->role_id == 1)
                                     <div class="d-flex justify-content-center gap-2">
                                         <a href="{{ route('produk.edit', $item) }}" class="btn btn-warning btn-sm text-dark px-2 py-1 shadow-sm" title="Edit">
                                             <i class="bi bi-pencil-square"></i> Edit
@@ -102,7 +102,7 @@
                                         </form>
                                     </div>
                                 @else
-                                    {{-- Tampilan untuk Kasir / Non-Admin --}}
+                                    {{-- Tampilan untuk Kasir / Non-Admin (Tidak ada tombol edit/hapus) --}}
                                     <span class="text-muted small fw-semibold">-</span>
                                 @endif
                             </td>
