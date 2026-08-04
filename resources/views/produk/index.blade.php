@@ -15,9 +15,13 @@
             </h3>
             <p class="text-muted small mb-0">Kelola daftar produk, stok, dan harga barang di aplikasi POS.</p>
         </div>
-        <a href="{{ route('produk.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
-            <i class="bi bi-plus-circle-fill me-1"></i> Create
-        </a>
+        
+        {{-- Tombol Create HANYA untuk ADMIN --}}
+        @if(auth()->check() && auth()->user()->role === 'admin')
+            <a href="{{ route('produk.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
+                <i class="bi bi-plus-circle-fill me-1"></i> Create
+            </a>
+        @endif
     </div>
 
     {{-- Card Wrapper untuk Konten --}}
@@ -83,18 +87,24 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('produk.edit', $item) }}" class="btn btn-warning btn-sm text-dark px-2 py-1 shadow-sm" title="Edit">
-                                        <i class="bi bi-pencil-square"></i> Edit
-                                    </a>
-                                    <form action="{{ route('produk.destroy', $item) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm px-2 py-1 shadow-sm" onclick="return confirm('Yakin hapus produk ini?')" title="Hapus">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </button>
-                                    </form>
-                                </div>
+                                {{-- Pengecekan Akses Aksi --}}
+                                @if(auth()->check() && auth()->user()->role === 'admin')
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <a href="{{ route('produk.edit', $item) }}" class="btn btn-warning btn-sm text-dark px-2 py-1 shadow-sm" title="Edit">
+                                            <i class="bi bi-pencil-square"></i> Edit
+                                        </a>
+                                        <form action="{{ route('produk.destroy', $item) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm px-2 py-1 shadow-sm" onclick="return confirm('Yakin hapus produk ini?')" title="Hapus">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    {{-- Tampilan untuk Kasir / Non-Admin --}}
+                                    <span class="text-muted small fw-semibold">-</span>
+                                @endif
                             </td>
                         </tr>
                         @empty

@@ -10,7 +10,7 @@ use App\Http\Controllers\UserController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
-    Route::post('/auth', [AuthController::class, 'auth'])->name('auth');
+    Route::post('/login', [AuthController::class, 'auth'])->name('login.post'); // Diubah dari /auth ke /login
 });
 
 Route::middleware('auth')->group(function () {
