@@ -11,7 +11,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold text-dark mb-1">
-                <i class="bi bi-box-seam text-primary me-2"></i>Halaman Produk
+                <i class="bi bi-box-seam text-primary me-2"></i>Produk
             </h3>
             <p class="text-muted small mb-0">Kelola daftar produk, stok, dan harga barang di aplikasi POS.</p>
         </div>
@@ -87,20 +87,19 @@
                                 @else
                                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">{{ $item->stok }}</span>
                                 @endif
-                            </td>
-                           <td class="text-center">
-                            <div class="d-flex justify-content-center gap-2">
-                                {{-- Tombol Edit (Kuning saat di-hover) --}}
-                                <a href="{{ route('produk.edit', $item) }}" class="btn btn-sm text-dark px-2 py-1 shadow-sm border" style="background-color: #f8f9fa; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#ffc107'" onmouseout="this.style.backgroundColor='#f8f9fa'" title="Edit">
-                                    <i class="bi bi-pencil-square"></i> Edit
+                         <td class="align-middle">
+                            <div class="d-flex gap-1">
+                                <!-- Tombol Edit (Outline Primary - Biru selaras dengan tema POS) -->
+                                <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-outline-primary btn-sm px-2 py-1 d-inline-flex align-items-center">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit
                                 </a>
-                                
-                                {{-- Tombol Hapus (Merah saat di-hover) --}}
-                                <form action="{{ route('produk.destroy', $item) }}" method="POST" class="d-inline">
+
+                                <!-- Tombol Hapus (Outline Danger - Merah lembut) -->
+                                <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-sm text-dark px-2 py-1 shadow-sm border" style="background-color: #f8f9fa; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='#fff'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.color='#000'" onclick="return confirm('Yakin hapus produk ini?')" title="Hapus">
-                                        <i class="bi bi-trash"></i> Hapus
+                                    <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                        <i class="bi bi-trash me-1"></i> Hapus
                                     </button>
                                 </form>
                             </div>

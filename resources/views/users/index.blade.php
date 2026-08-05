@@ -12,7 +12,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h3 class="fw-bold text-dark mb-1">
-                <i class="bi bi-people-fill text-primary me-2"></i>Halaman Users
+                <i class="bi bi-people-fill text-primary me-2"></i>Users
             </h3>
             <p class="text-muted small mb-0">Kelola daftar pengguna aplikasi POS dengan mudah.</p>
         </div>
