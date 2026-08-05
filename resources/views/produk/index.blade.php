@@ -40,8 +40,10 @@
             </form>
 
             {{-- Tabel Data Produk --}}
+            {{-- Tabel Data Produk --}}
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                {{-- PERUBAHAN 1: Hapus "table-hover" di sini agar baris tidak ikut abu-abu --}}
+                <table class="table align-middle mb-0">
                     <thead class="table-light text-uppercase fs-7 text-secondary">
                         <tr>
                             <th class="py-3 ps-3" style="width: 5%;">#</th>
@@ -82,20 +84,23 @@
                                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">{{ $item->stok }}</span>
                                 @endif
                             </td>
-                            <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('produk.edit', $item) }}" class="btn btn-warning btn-sm text-dark px-2 py-1 shadow-sm" title="Edit">
-                                        <i class="bi bi-pencil-square"></i> Edit
-                                    </a>
-                                    <form action="{{ route('produk.destroy', $item) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm px-2 py-1 shadow-sm" onclick="return confirm('Yakin hapus produk ini?')" title="Hapus">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                           <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                {{-- Tombol Edit (Kuning saat di-hover) --}}
+                                <a href="{{ route('produk.edit', $item) }}" class="btn btn-sm text-dark px-2 py-1 shadow-sm border" style="background-color: #f8f9fa; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#ffc107'" onmouseout="this.style.backgroundColor='#f8f9fa'" title="Edit">
+                                    <i class="bi bi-pencil-square"></i> Edit
+                                </a>
+                                
+                                {{-- Tombol Hapus (Merah saat di-hover) --}}
+                                <form action="{{ route('produk.destroy', $item) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm text-dark px-2 py-1 shadow-sm border" style="background-color: #f8f9fa; transition: background-color 0.2s;" onmouseover="this.style.backgroundColor='#dc3545'; this.style.color='#fff'" onmouseout="this.style.backgroundColor='#f8f9fa'; this.style.color='#000'" onclick="return confirm('Yakin hapus produk ini?')" title="Hapus">
+                                        <i class="bi bi-trash"></i> Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                         </tr>
                         @empty
                         <tr>
@@ -105,7 +110,6 @@
                     </tbody>
                 </table>
             </div>
-
             {{-- Pagination --}}
             @if (method_exists($products, 'links'))
                 <div class="mt-4 d-flex justify-content-end">
