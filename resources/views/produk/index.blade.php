@@ -15,9 +15,13 @@
             </h3>
             <p class="text-muted small mb-0">Kelola daftar produk, stok, dan harga barang di aplikasi POS.</p>
         </div>
-        <a href="{{ route('produk.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
-            <i class="bi bi-plus-circle-fill me-1"></i> Create
-        </a>
+        
+        {{-- Tombol Create HANYA untuk ADMIN (role_id = 1) --}}
+        @if(auth()->check() && auth()->user()->role_id == 1)
+            <a href="{{ route('produk.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
+                <i class="bi bi-plus-circle-fill me-1"></i> Create
+            </a>
+        @endif
     </div>
 
     {{-- Card Wrapper untuk Konten --}}

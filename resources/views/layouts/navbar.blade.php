@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3 mb-4">
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3 mb-4 sticky-top">
     <div class="container">
         {{-- Brand / Logo POS --}}
         <a class="navbar-brand fw-bold text-primary fs-4" href="{{ route('dashboard') }}">
