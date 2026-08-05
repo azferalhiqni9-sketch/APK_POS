@@ -17,7 +17,7 @@
             <p class="text-muted small mb-0">Kelola daftar pengguna aplikasi POS dengan mudah.</p>
         </div>
         <a href="{{ route('admin.users.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
-            <i class="bi bi-person-plus-fill me-1"></i> Create
+            <i class="bi bi-person-plus-fill me-1"></i> Tambah User
         </a>
     </div>
 
@@ -66,20 +66,20 @@
                                     {{ is_object($user->role) ? $user->role->name : ucfirst($user->role) }}
                                 </span>
                             </td>
-                            <td class="text-center">
-                                <div class="d-flex justify-content-center gap-2">
-                                    <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-warning btn-sm text-dark px-2 py-1 shadow-sm" title="Edit">
-                                        <i class="bi bi-pencil-square"></i> Edit
-                                    </a>
-                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm px-2 py-1 shadow-sm" onclick="return confirm('Yakin hapus user ini?')" title="Hapus">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
+                                                    <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a href="{{ route('admin.users.edit', $user) }}" class="btn btn-outline-primary btn-sm px-2 py-1 shadow-sm d-inline-flex align-items-center" title="Edit">
+                                    <i class="bi bi-pencil-square me-1"></i> Edit
+                                </a>
+                                <form action="{{ route('admin.users.destroy', $user) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1 shadow-sm d-inline-flex align-items-center" onclick="return confirm('Yakin hapus user ini?')" title="Hapus">
+                                        <i class="bi bi-trash me-1"></i> Hapus
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
                         </tr>
                         @empty
                         <tr>

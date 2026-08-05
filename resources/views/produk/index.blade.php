@@ -19,7 +19,7 @@
         {{-- Tombol Create HANYA untuk ADMIN (role_id = 1) --}}
         @if(auth()->check() && auth()->user()->role_id == 1)
             <a href="{{ route('produk.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
-                <i class="bi bi-plus-circle-fill me-1"></i> Create
+                <i class="bi bi-plus-circle-fill me-1"></i> Tambah Produk
             </a>
         @endif
     </div>

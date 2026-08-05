@@ -16,7 +16,7 @@
             <p class="text-muted small mb-0">Kelola riwayat transaksi, status pembayaran, dan kasir toko.</p>
         </div>
         <a href="{{ route('penjualan.create') }}" class="btn btn-primary shadow-sm px-3 py-2">
-            <i class="bi bi-plus-circle-fill me-1"></i> Create
+            <i class="bi bi-plus-circle-fill me-1"></i> Tambah Penjualan
         </a>
     </div>
 
