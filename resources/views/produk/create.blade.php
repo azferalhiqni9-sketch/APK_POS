@@ -29,47 +29,47 @@
                 @csrf
 
                 <div class="mb-3">
-                    <label for="image" class="form-label fw-semibold text-secondary">Gambar Produk</label>
-                    <input type="file" class="form-control bg-light @error('image') is-invalid @enderror" id="image" name="image">
-                    @error('image')
+                    <label for="foto" class="form-label fw-semibold text-secondary">Gambar Produk</label>
+                    <input type="file" class="form-control bg-light @error('foto') is-invalid @enderror" id="foto" name="foto">
+                    @error('foto')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="nama_produk" class="form-label fw-semibold text-secondary">Nama Produk</label>
-                    <input type="text" class="form-control bg-light @error('nama_produk') is-invalid @enderror" id="nama_produk" name="nama_produk" value="{{ old('nama_produk') }}" placeholder="Contoh: Kopi Susu" required>
-                    @error('nama_produk')
+                    <label for="name" class="form-label fw-semibold text-secondary">Nama Produk</label>
+                    <input type="text" class="form-control bg-light @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Contoh: Kopi Susu" required>
+                    @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="harga_beli" class="form-label fw-semibold text-secondary">Harga Beli</label>
-                    <input type="number" class="form-control bg-light @error('harga_beli') is-invalid @enderror" id="harga_beli" name="harga_beli" value="{{ old('harga_beli') }}" placeholder="0" required>
-                    @error('harga_beli')
+                    <label for="purchase_price" class="form-label fw-semibold text-secondary">Harga Beli</label>
+                    <input type="number" class="form-control bg-light @error('purchase_price') is-invalid @enderror" id="purchase_price" name="purchase_price" value="{{ old('purchase_price') }}" placeholder="0" required>
+                    @error('purchase_price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-3">
-                    <label for="harga_jual" class="form-label fw-semibold text-secondary">Harga Jual</label>
-                    <input type="number" class="form-control bg-light @error('harga_jual') is-invalid @enderror" id="harga_jual" name="harga_jual" value="{{ old('harga_jual') }}" placeholder="0" required>
-                    @error('harga_jual')
+                    <label for="selling_price" class="form-label fw-semibold text-secondary">Harga Jual</label>
+                    <input type="number" class="form-control bg-light @error('selling_price') is-invalid @enderror" id="selling_price" name="selling_price" value="{{ old('selling_price') }}" placeholder="0" required>
+                    @error('selling_price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
                 <div class="mb-4">
-                    <label for="stok" class="form-label fw-semibold text-secondary">Stok</label>
-                    <input type="number" class="form-control bg-light @error('stok') is-invalid @enderror" id="stok" name="stok" value="{{ old('stok') }}" placeholder="0" required>
-                    @error('stok')
+                    <label for="stock" class="form-label fw-semibold text-secondary">Stok</label>
+                    <input type="number" class="form-control bg-light @error('stock') is-invalid @enderror" id="stock" name="stock" value="{{ old('stock') }}" placeholder="0" required>
+                    @error('stock')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
-                <div class="d-flex justify-content-end gap-2">
-                    <a href="{{ route('produk.index') }}" class="btn btn-light px-4">Batal</a>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <a href="{{ route('produk.index') }}" class="btn btn-light px-4 border">Batal</a>
                     <button type="submit" class="btn btn-primary px-4 shadow-sm">
                         <i class="bi bi-save me-1"></i> Simpan
                     </button>
