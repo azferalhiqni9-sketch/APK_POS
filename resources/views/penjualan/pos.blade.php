@@ -4,8 +4,7 @@
 
 @section('content')
 
-{{-- Navbar Utama --}}
-@include('layouts.navbar')
+
 
 <div class="container py-3">
     @if (session('errors'))

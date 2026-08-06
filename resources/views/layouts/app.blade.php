@@ -8,12 +8,13 @@
 </head>
 <body class="bg-light">
 
-    {{-- Navbar hanya akan muncul jika bukan halaman login --}}
+    {{-- Navbar teteh yang sudah bagus --}}
     @if (!request()->is('login'))
         @include('layouts.navbar')
     @endif
 
-    <main class="container py-3">
+    {{-- KONTEN UTAMA: Padding kiri-kanan disamakan jadi 20px supaya sejajar pas --}}
+    <main style="max-width: 1200px; width: 100%; margin: 0 auto; padding-left: 20px; padding-right: 20px;" class="py-3">
         @yield('content')
     </main>
 
