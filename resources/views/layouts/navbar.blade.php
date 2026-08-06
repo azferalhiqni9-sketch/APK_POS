@@ -18,11 +18,16 @@
                         <i class="bi bi-speedometer2 me-1"></i> Dashboard
                     </a>
                 </li>
+
+                {{-- Menu Users HANYA untuk ADMIN (role_id = 1) --}}
+                @if(auth()->check() && auth()->user()->role_id == 1)
                 <li class="nav-item">
                     <a class="nav-link px-3 rounded {{ request()->routeIs('admin.users*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-dark' }}" href="{{ route('admin.users') }}">
                         <i class="bi bi-people me-1"></i> Users
                     </a>
                 </li>
+                @endif
+
                 <li class="nav-item">
                     <a class="nav-link px-3 rounded {{ request()->routeIs('produk*') ? 'active bg-primary text-white fw-bold shadow-sm' : 'text-dark' }}" href="{{ route('produk.index') }}">
                         <i class="bi bi-box-seam me-1"></i> Produk

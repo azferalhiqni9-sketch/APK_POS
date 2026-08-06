@@ -44,9 +44,7 @@
             </form>
 
             {{-- Tabel Data Produk --}}
-            {{-- Tabel Data Produk --}}
             <div class="table-responsive">
-                {{-- PERUBAHAN 1: Hapus "table-hover" di sini agar baris tidak ikut abu-abu --}}
                 <table class="table align-middle mb-0">
                     <thead class="table-light text-uppercase fs-7 text-secondary">
                         <tr>
@@ -87,23 +85,29 @@
                                 @else
                                     <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill fw-semibold">{{ $item->stok }}</span>
                                 @endif
-                         <td class="align-middle">
-                            <div class="d-flex gap-1">
-                                <!-- Tombol Edit (Outline Primary - Biru selaras dengan tema POS) -->
-                                <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-outline-primary btn-sm px-2 py-1 d-inline-flex align-items-center">
-                                    <i class="bi bi-pencil-square me-1"></i> Edit
-                                </a>
+                            </td>
+                            <td class="align-middle">
+                                {{-- Tombol Aksi HANYA MUNCUL UNTUK ADMIN (role_id = 1) --}}
+                                @if(auth()->check() && auth()->user()->role_id == 1)
+                                    <div class="d-flex gap-1 justify-content-center">
+                                        <!-- Tombol Edit -->
+                                        <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-outline-primary btn-sm px-2 py-1 d-inline-flex align-items-center">
+                                            <i class="bi bi-pencil-square me-1"></i> Edit
+                                        </a>
 
-                                <!-- Tombol Hapus (Outline Danger - Merah lembut) -->
-                                <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
-                                        <i class="bi bi-trash me-1"></i> Hapus
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
+                                        <!-- Tombol Hapus -->
+                                        <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                                <i class="bi bi-trash me-1"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                @else
+                                    <div class="text-center text-muted small">-</div>
+                                @endif
+                            </td>
                         </tr>
                         @empty
                         <tr>
@@ -113,6 +117,7 @@
                     </tbody>
                 </table>
             </div>
+
             {{-- Pagination --}}
             @if (method_exists($products, 'links'))
                 <div class="mt-4 d-flex justify-content-end">
