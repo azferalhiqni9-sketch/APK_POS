@@ -5,7 +5,7 @@
 @section('content')
 
 {{-- Navbar sudah dipanggil di layout utama atau di sini --}}
-@include('layouts.navbar')
+
 
 <div class="container py-3">
     {{-- Header & Tombol Tambah --}}

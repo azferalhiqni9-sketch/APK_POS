@@ -4,7 +4,7 @@
 
 @section('content')
 
-@include('layouts.navbar')
+
 
 <div class="container py-3">
     {{-- Header & Tombol Tambah --}}

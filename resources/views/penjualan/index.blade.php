@@ -4,8 +4,6 @@
 
 @section('content')
 
-@include('layouts.navbar')
-
 <div class="container py-3">
     {{-- Header & Tombol Tambah --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
