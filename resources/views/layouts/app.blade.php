@@ -8,8 +8,10 @@
 </head>
 <body class="bg-light">
 
-    <!-- Navbar dipanggil satu kali saja di sini -->
-    @include('layouts.navbar')
+    {{-- Navbar hanya akan muncul jika bukan halaman login --}}
+    @if (!request()->is('login'))
+        @include('layouts.navbar')
+    @endif
 
     <main class="container py-3">
         @yield('content')
