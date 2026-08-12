@@ -24,6 +24,22 @@
     @enderror
 </div>
 
+<div class="mb-4">
+    <label class="form-label fw-semibold text-secondary">Nama Jenis</label>
+    <select name="jenis_id" class="form-select bg-light @error('jenis_id') is-invalid @enderror" required>
+        <option value="" selected disabled>-- Pilih Jenis --</option>
+        @foreach ($jenis as $item)
+            <option value="{{ $item->id }}" @selected(old('jenis_id', $produk->jenis_id ?? '') == $item->id)>
+                {{ ucfirst($item->nama_jenis) }}
+            </option>
+        @endforeach
+    </select>
+    @error('jenis_id')
+        <div class="invalid-feedback">
+            {{ $message }}
+        </div>
+    @enderror
+</div>
 <div>
     <label>Harga Beli</label><br>
     <input type="number" name="purchase_price"

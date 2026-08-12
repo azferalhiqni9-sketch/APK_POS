@@ -4,6 +4,8 @@
 
 @section('content')
 
+
+
 <div class="container py-3">
     {{-- Header & Tombol Tambah --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -73,9 +75,7 @@
                                 @endif
                             </td>
                             <td>
-                                {{-- TAMPILAN TETAP SAMA: Nama Produk ditambah info Jenis di bawahnya --}}
                                 <div class="fw-bold text-dark">{{ $item->nama }}</div>
-                                <small class="text-muted">Jenis: {{ $item->jenis->nama_jenis ?? '-' }}</small>
                             </td>
                             <td class="text-muted">Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
                             <td class="fw-semibold text-success">Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
