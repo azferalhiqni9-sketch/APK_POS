@@ -32,6 +32,11 @@
                     @endif
 
                     <li class="nav-item">
+                        <a class="btn {{ Request::is('jenis*') ? 'btn-primary fw-bold shadow-sm' : 'btn-light text-dark' }}" href="{{ route('jenis.index') }}">
+                            <i class="bi bi-tags me-1"></i> Jenis
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="btn {{ Request::is('produk*') ? 'btn-primary fw-bold shadow-sm' : 'btn-light text-dark' }}" href="{{ route('produk.index') }}">
                             <i class="bi bi-box-seam me-1"></i> Produk
                         </a>
