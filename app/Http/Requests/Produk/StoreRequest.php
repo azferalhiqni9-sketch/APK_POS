@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Produk;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Override;
 
@@ -19,12 +18,12 @@ class StoreRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, mixed>
      */
     public function rules(): array
     {
         return [
-            'jenis_id'       => 'required|exists:jenis,id', // <-- Ditambahkan agar jenis_id tervalidasi
+            'jenis_id'       => 'required|exists:jenis,id',
             'foto'           => 'nullable|image|mimes:png,jpg|max:2048',
             'name'           => 'required|string|max:255',
             'purchase_price' => 'required|integer|min:0',
@@ -37,8 +36,8 @@ class StoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'jenis_id.required'       => 'Jenis produk wajib dipilih.', // <-- Pesan error jenis_id
-            'jenis_id.exists'         => 'Jenis produk tidak valid.',   // <-- Pesan error jenis_id
+            'jenis_id.required'       => 'Jenis produk wajib dipilih.',
+            'jenis_id.exists'         => 'Jenis produk tidak valid.',
             'foto.image'              => 'File yang diupload harus gambar.',
             'foto.mimes'              => 'Extensi gambar harus JPG, JPEG, PNG.',
             'foto.max'                => 'Maksimal ukuran gambar 2MB.',

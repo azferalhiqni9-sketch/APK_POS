@@ -1,10 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Penjualan')
+@section('title', 'Jenis Produk')
 
 @section('content')
-
-    
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Daftar Jenis Produk</h2>
@@ -27,15 +25,13 @@
                     <td>{{ $item->nama_jenis }}</td>
                     <td>
                         <div class="d-flex align-items-center gap-2">
-                            <!-- Lingkaran Avatar Inisial -->
-                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold flex-shrink-0" 
+                            <div class="bg-dark text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shrink-0" 
                                 style="width: 32px; height: 32px; font-size: 0.8rem;">
-                                {{ strtoupper(substr($sale->user->name ?? $item->user->name ?? 'K', 0, 1)) }}
+                                {{ strtoupper(substr($item->user->name ?? 'K', 0, 1)) }}
                             </div>
 
-                            <!-- Nama User Sejajar Samping -->
                             <span class="fw-semibold text-dark small">
-                                {{ $sale->user->name ?? $item->user->name ?? 'Kasir' }}
+                                {{ $item->user->name ?? 'Kasir' }}
                             </span>
                         </div>
                     </td>
@@ -45,11 +41,11 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" 
-                            class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2.5 py-1" 
-                            onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')"
-                                title="Hapus Produk">
-                             <i class="bi bi-trash"></i>
-                            <span>Hapus</span>
+                                class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2.5 py-1" 
+                                onclick="return confirm('Apakah Anda yakin ingin menghapus jenis ini?')"
+                                title="Hapus Jenis">
+                                <i class="bi bi-trash"></i>
+                                <span>Hapus</span>
                             </button>
                         </form>
                     </td>
