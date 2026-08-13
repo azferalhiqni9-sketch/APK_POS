@@ -11,8 +11,10 @@ class Produk extends Model
 
     protected $table = 'produk';
     
+    // 1. TAMBAHKAN 'jenis_id' DI SINI
     protected $fillable = [
         'user_id',
+        'jenis_id',
         'foto',
         'nama',
         'harga_beli',
@@ -23,6 +25,12 @@ class Produk extends Model
     public function user ()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // 2. TAMBAHKAN RELASI KE MODEL JENIS DI SINI
+    public function jenis()
+    {
+        return $this->belongsTo(Jenis::class, 'jenis_id');
     }
 
     public function itemPenjualan()

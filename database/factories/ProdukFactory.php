@@ -2,9 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\Jenis;
 use App\Models\Produk;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends Factory<Produk>
@@ -21,7 +22,14 @@ class ProdukFactory extends Factory
         $hargaBeli = $this->faker->numberBetween(10_000, 500_000);
 
         return [
-            'user_id' => User::where('role_id', 1)->inRandomOrder()->value('id'),
+            // Ambil ID User role Admin (role_id = 1), atau user acak
+            'user_id' => User::where('role_id', 1)->inRandomOrder()->value('id') 
+                         ?? User::inRandomOrder()->value('id') 
+                         ?? User::factory(),
+
+            // Ambil ID Jenis secara acak dari database
+            'jenis_id' => Jenis::inRandomOrder()->value('id'),
+
             'foto' => 'produk/' . $this->faker->uuid . '.jpg',
             'nama' => $this->faker->words(3, true),
             'harga_beli' => $hargaBeli,

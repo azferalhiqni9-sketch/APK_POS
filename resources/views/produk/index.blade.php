@@ -4,8 +4,6 @@
 
 @section('content')
 
-
-
 <div class="container py-3">
     {{-- Header & Tombol Tambah --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -51,7 +49,8 @@
                             <th class="py-3 ps-3" style="width: 5%;">#</th>
                             <th class="py-3">User</th>
                             <th class="py-3 text-center" style="width: 8%;">Foto</th>
-                            <th class="py-3">Nama</th>
+                            <th class="py-3">Nama Jenis</th>
+                            <th class="py-3">Nama Produk</th>
                             <th class="py-3">Harga Beli</th>
                             <th class="py-3">Harga Jual</th>
                             <th class="py-3">Stok</th>
@@ -75,7 +74,11 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="fw-bold text-dark">{{ $item->nama }}</div>
+                                {{-- Memanggil relasi ke jenis_id dengan kolom nama_jenis --}}
+                                <div class="fw-bold text-dark">{{ $item->jenis->nama_jenis ?? '-' }}</div>
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark">{{ $item->nama ?? '-' }}</div>
                             </td>
                             <td class="text-muted">Rp {{ number_format($item->harga_beli, 0, ',', '.') }}</td>
                             <td class="fw-semibold text-success">Rp {{ number_format($item->harga_jual, 0, ',', '.') }}</td>
@@ -90,12 +93,10 @@
                                 {{-- Tombol Aksi HANYA MUNCUL UNTUK ADMIN (role_id = 1) --}}
                                 @if(auth()->check() && auth()->user()->role_id == 1)
                                     <div class="d-flex gap-1 justify-content-center">
-                                        <!-- Tombol Edit -->
                                         <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-outline-primary btn-sm px-2 py-1 d-inline-flex align-items-center">
                                             <i class="bi bi-pencil-square me-1"></i> Edit
                                         </a>
 
-                                        <!-- Tombol Hapus -->
                                         <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
@@ -111,7 +112,7 @@
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="8" class="text-center py-4 text-muted">Tidak ada data produk ditemukan.</td>
+                            <td colspan="9" class="text-center py-4 text-muted">Tidak ada data produk ditemukan.</td>
                         </tr>
                         @endforelse
                     </tbody>
