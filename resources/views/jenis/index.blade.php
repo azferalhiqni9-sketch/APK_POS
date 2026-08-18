@@ -3,12 +3,17 @@
 @section('title', 'Jenis Produk')
 
 @section('content')
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>Daftar Jenis Produk</h2>
-        <a href="{{ route('jenis.create') }}" class="btn btn-primary">+ Tambah Jenis</a>
+<<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="fw-bold mb-1 d-flex align-items-center gap-2">
+            <i class="bi bi-tags-fill text-primary" style="font-size: 1.5rem;"></i> Jenis
+        </h2>
+        <p class="text-muted small mb-0">Kelola daftar jenis produk aplikasi POS dengan mudah.</p>
     </div>
-
+    <a href="{{ route('jenis.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-1 shadow-sm">
+        <i class="bi bi-plus-lg"></i> Tambah Jenis
+    </a>
+</div>
     <table class="table table-bordered table-striped">
         <thead class="bg-light text-uppercase text-secondary small fw-bold">
             <tr>
