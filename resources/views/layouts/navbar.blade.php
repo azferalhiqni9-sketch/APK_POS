@@ -31,11 +31,15 @@
                     </li>
                     @endif
 
+                    {{-- Menu Jenis HANYA untuk ADMIN (role_id = 1) --}}
+                    @if(auth()->check() && auth()->user()->role_id == 1)
                     <li class="nav-item">
                         <a class="btn {{ Request::is('jenis*') ? 'btn-primary fw-bold shadow-sm' : 'btn-light text-dark' }}" href="{{ route('jenis.index') }}">
                             <i class="bi bi-tags me-1"></i> Jenis
                         </a>
                     </li>
+                    @endif
+
                     <li class="nav-item">
                         <a class="btn {{ Request::is('produk*') ? 'btn-primary fw-bold shadow-sm' : 'btn-light text-dark' }}" href="{{ route('produk.index') }}">
                             <i class="bi bi-box-seam me-1"></i> Produk
