@@ -3,7 +3,7 @@
 @section('title', 'Jenis Produk')
 
 @section('content')
-<<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="fw-bold mb-1 d-flex align-items-center gap-2">
             <i class="bi bi-tags-fill text-primary" style="font-size: 1.5rem;"></i> Jenis
