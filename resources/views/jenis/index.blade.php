@@ -42,12 +42,14 @@
                     </td>
                     <td>
                         <a href="{{ route('jenis.edit', $item->id) }}" class="btn btn-sm btn-outline-warning d-inline-flex align-items-center gap-1 px-2.5 py-1">Edit</a>
-                        <form action="{{ route('jenis.destroy', $item->id) }}" method="POST" class="d-inline">
+                        
+                        {{-- Form Hapus dengan SweetAlert --}}
+                        <form id="delete-form-{{ $item->id }}" action="{{ route('jenis.destroy', $item->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" 
+                            <button type="button" 
                                 class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 px-2.5 py-1" 
-                                onclick="return confirm('Apakah Anda yakin ingin menghapus jenis ini?')"
+                                onclick="confirmJenisDelete({{ $item->id }})"
                                 title="Hapus Jenis">
                                 <i class="bi bi-trash"></i>
                                 <span>Hapus</span>
@@ -63,4 +65,24 @@
         </tbody>
     </table>
 </div>
+
+{{-- Script SweetAlert khusus untuk Hapus --}}
+<script>
+function confirmJenisDelete(id) {
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data jenis yang dihapus tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-' + id).submit();
+        }
+    });
+}
+</script>
 @endsection

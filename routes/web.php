@@ -11,7 +11,7 @@ use App\Http\Controllers\JenisController;
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
-    Route::post('/login', [AuthController::class, 'auth'])->name('login.post'); // Diubah dari /auth ke /login
+    Route::post('/login', [AuthController::class, 'auth'])->name('login.post');
 });
 
 Route::middleware('auth')->group(function () {
@@ -31,6 +31,10 @@ Route::middleware('auth')->group(function () {
         Route::resource('/produk', ProdukController::class)->names('produk');
         Route::resource('/penjualan', PenjualanController::class);
         Route::resource('/itempenjualan', ItemPenjualanController::class);
-        Route::resource('jenis', JenisController::class);
+        
+        // Diperbaiki agar parameter routenya menjadi 'jenis', bukan 'jeni'
+        Route::resource('jenis', JenisController::class)->parameters([
+            'jenis' => 'jenis'
+        ]);
     });
 });

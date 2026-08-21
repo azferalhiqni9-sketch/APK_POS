@@ -74,7 +74,6 @@
                                 @endif
                             </td>
                             <td>
-                                {{-- Memanggil relasi ke jenis_id dengan kolom nama_jenis --}}
                                 <div class="fw-bold text-dark">{{ $item->jenis->nama_jenis ?? '-' }}</div>
                             </td>
                             <td>
@@ -90,17 +89,19 @@
                                 @endif
                             </td>
                             <td class="align-middle">
-                                {{-- Tombol Aksi HANYA MUNCUL UNTUK ADMIN (role_id = 1) --}}
                                 @if(auth()->check() && auth()->user()->role_id == 1)
                                     <div class="d-flex gap-1 justify-content-center">
                                         <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-outline-primary btn-sm px-2 py-1 d-inline-flex align-items-center">
                                             <i class="bi bi-pencil-square me-1"></i> Edit
                                         </a>
 
-                                        <form action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
+                                        {{-- Form Hapus dengan SweetAlert --}}
+                                        <form id="delete-form-produk-{{ $item->id }}" action="{{ route('produk.destroy', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
+                                            <button type="button" 
+                                                class="btn btn-outline-danger btn-sm px-2 py-1 d-inline-flex align-items-center" 
+                                                onclick="confirmProdukDelete({{ $item->id }})">
                                                 <i class="bi bi-trash me-1"></i> Hapus
                                             </button>
                                         </form>
@@ -129,5 +130,25 @@
         </div>
     </div>
 </div>
+
+{{-- Script SweetAlert khusus untuk Hapus Produk --}}
+<script>
+function confirmProdukDelete(id) {
+    Swal.fire({
+        title: 'Apakah Anda yakin?',
+        text: "Data produk yang dihapus tidak dapat dikembalikan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form-produk-' + id).submit();
+        }
+    });
+}
+</script>
 
 @endsection
