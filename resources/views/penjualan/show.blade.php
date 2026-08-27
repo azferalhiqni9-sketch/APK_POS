@@ -6,7 +6,7 @@
 
 <div class="container-fluid px-4 py-4">
 
-    {{-- Header Halaman & Tombol Kembali --}}
+    {{-- Header Halaman & Tombol Aksi --}}
     <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
         <div class="d-flex align-items-center">
             <div class="bg-primary text-white rounded-3 p-3 me-3 shadow-sm d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
@@ -17,9 +17,16 @@
                 <p class="text-muted small mb-0">Rincian informasi lengkap transaksi dan daftar produk.</p>
             </div>
         </div>
-        <a href="{{ route('penjualan.index') }}" class="btn btn-outline-secondary px-4 py-2 shadow-sm fw-semibold rounded-pill hover-back-btn">
-            <i class="bi bi-arrow-left me-2"></i> Kembali
-        </a>
+        
+        {{-- Grup Tombol Kanan (Cetak & Kembali) --}}
+        <div class="d-flex align-items-center gap-2">
+            <button onclick="window.print()" class="btn btn-primary px-4 py-2 shadow-sm fw-semibold rounded-pill hover-print-btn">
+                <i class="bi bi-printer-fill me-2"></i> Cetak Struk
+            </button>
+            <a href="{{ route('penjualan.index') }}" class="btn btn-outline-secondary px-4 py-2 shadow-sm fw-semibold rounded-pill hover-back-btn">
+                <i class="bi bi-arrow-left me-2"></i> Kembali
+            </a>
+        </div>
     </div>
 
     <div class="row g-4">
@@ -141,7 +148,7 @@
 
 </div>
 
-{{-- CSS Tambahan untuk Mempercantik Animasi & Efek Hover --}}
+{{-- CSS Tambahan untuk Animasi & Khusus Cetak Struk (Print) --}}
 <style>
     .hover-back-btn {
         transition: all 0.25s ease-in-out;
@@ -153,8 +160,41 @@
         transform: translateY(-2px);
         box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
     }
+    .hover-print-btn {
+        transition: all 0.25s ease-in-out;
+    }
+    .hover-print-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important;
+    }
     .fw-extrabold {
         font-weight: 800 !important;
+    }
+
+    /* Pengaturan Khusus Saat Dicetak / Cetak Struk */
+    @media print {
+        /* Sembunyikan navbar utama aplikasi, tombol cetak, dan tombol kembali */
+        nav, .navbar, .btn, .d-flex.justify-content-between.align-items-center.mb-4.pb-3.border-bottom > div:last-child {
+            display: none !important;
+        }
+
+        /* Hilangkan bayangan dan border luar agar bersih seperti struk kertas */
+        body {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+            -webkit-print-color-adjust: exact;
+        }
+
+        .card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .container-fluid {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
     }
 </style>
 

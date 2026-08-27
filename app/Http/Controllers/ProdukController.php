@@ -143,8 +143,9 @@ class ProdukController extends Controller
         // Lakukan pembaruan data produk
         $produk->update($data);
 
-        return redirect()->route('produk.edit', $produk)
-            ->with('success', 'Produk updated successfully.');
+        // Diubah agar langsung kembali ke halaman index (daftar produk) setelah disimpan
+        return redirect()->route('produk.index')
+            ->with('success', 'Produk berhasil diperbarui.');
     }
 
     /**

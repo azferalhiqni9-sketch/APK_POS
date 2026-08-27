@@ -6,7 +6,8 @@ use App\Models\Jenis;
 use App\Http\Requests\UpdateJenisRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage; // <--- Import ini ditambahkan agar Storage tidak error
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\QueryException; // <--- Import ini ditambahkan untuk menangkap error constraint
 
 class JenisController extends Controller
 {
@@ -98,13 +99,25 @@ class JenisController extends Controller
     {
         $this->authorize('delete', $jenis);
 
-        if (!empty($jenis->foto) && Storage::disk('public')->exists($jenis->foto)) {
-            Storage::disk('public')->delete($jenis->foto);
+        try {
+            if (!empty($jenis->foto) && Storage::disk('public')->exists($jenis->foto)) {
+                Storage::disk('public')->delete($jenis->foto);
+            }
+
+            $jenis->delete();
+
+            return redirect()->route('jenis.index')
+                ->with('success', 'Jenis berhasil dihapus.');
+
+        } catch (QueryException $e) {
+            // Menangkap error jika masih terikat relasi database (foreign key constraint)
+            if ($e->getCode() == '23000') {
+                return redirect()->route('jenis.index')
+                    ->with('error', 'Gagal menghapus! Jenis ini masih digunakan oleh produk yang terikat dengan data transaksi.');
+            }
+
+            return redirect()->route('jenis.index')
+                ->with('error', 'Terjadi kesalahan pada sistem database.');
         }
-
-        $jenis->delete();
-
-        return redirect()->route('jenis.index')
-            ->with('success', 'Jenis berhasil dihapus.');
     }
 }
