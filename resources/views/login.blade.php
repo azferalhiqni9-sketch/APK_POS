@@ -12,7 +12,7 @@
             <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-2 shadow-sm" style="width: 55px; height: 55px;">
                 <i class="bi bi-shop fs-4"></i>
             </div>
-            <div class="fw-bold text-primary fs-3 mb-1" style="letter-spacing: -1px;">Toko <span class="text-dark">Berkah</span></div>
+            <div class="fw-bold text-primary fs-3 mb-1" style="letter-spacing: -1px;">Pos<span class="text-dark">Berkah</span></div>
             <p class="text-muted small mb-0">Masukkan akun untuk mengakses sistem</p>
         </div>
 

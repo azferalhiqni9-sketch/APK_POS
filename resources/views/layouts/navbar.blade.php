@@ -4,7 +4,7 @@
             
             {{-- Brand / Logo POS --}}
             <a class="navbar-brand fw-bold text-primary fs-4 m-0 text-decoration-none" href="{{ route('dashboard') }}">
-                <i class="bi bi-shop me-2"></i>Toko Berkah POS
+                <i class="bi bi-shop me-2"></i>Pos Berkah 
             </a>
 
             {{-- Toggle Button for Mobile --}}
