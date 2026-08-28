@@ -4,14 +4,7 @@
 
 @section('content')
 
-
-
 <div class="container py-3">
-    @if (session('errors'))
-        <div class="alert alert-danger shadow-sm rounded-3">
-            {{ session('errors') }}
-        </div>
-    @endif
 
     {{-- Header Halaman --}}
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -137,8 +130,8 @@
                                 <h4 class="fw-bold text-dark mb-0">Rp {{ number_format($sale->total_pembayaran) }}</h4>
                             </div>
 
-                            <form method="POST" action="{{ route('penjualan.update', $sale->id) }}"
-                                onsubmit="return confirm('Yakin ingin checkout ?')">
+                            {{-- Form Checkout dengan SweetAlert2 --}}
+                            <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" id="form-checkout">
                                 @csrf
                                 @method('PUT')
 
@@ -148,18 +141,18 @@
                                     <option value="QRIS">QRIS</option>
                                 </select>
 
-                                <button class="btn btn-success w-100 py-2 fw-semibold shadow-sm {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
+                                <button type="button" class="btn btn-success w-100 py-2 fw-semibold shadow-sm btn-checkout {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                                     <i class="bi bi-check-circle me-1"></i> Checkout
                                 </button>
                             </form>
 
+                            {{-- Form Batalkan Transaksi dengan SweetAlert2 --}}
                             @can('delete', $sale)
-                            <form action="{{ route('penjualan.destroy', $sale->id) }}" method="POST"
-                                onsubmit="return confirm('Yakin ingin membatalkan transaksi?')" class="mt-2">
+                            <form action="{{ route('penjualan.destroy', $sale->id) }}" method="POST" class="mt-2" id="form-batal">
                                 @csrf
                                 @method('DELETE')
 
-                                <button class="btn btn-outline-danger w-100 py-2 fw-semibold {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
+                                <button type="button" class="btn btn-outline-danger w-100 py-2 fw-semibold btn-batal {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                                     <i class="bi bi-x-circle me-1"></i> Batalkan Transaksi
                                 </button>
                             </form>
@@ -174,5 +167,70 @@
         </div>
     </div>
 </div>
+
+{{-- Script SweetAlert2 untuk Halaman POS --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Pop-up jika Stok Tidak Cukup
+        @if (session('swal_error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Stok Tidak Cukup!',
+                text: '{{ session('swal_error') }}',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'Mengerti'
+            });
+        @endif
+
+        // Konfirmasi Checkout
+        const btnCheckout = document.querySelector('.btn-checkout');
+        if (btnCheckout) {
+            btnCheckout.addEventListener('click', function (e) {
+                e.preventDefault();
+                const form = document.getElementById('form-checkout');
+
+                Swal.fire({
+                    title: 'Konfirmasi Checkout',
+                    text: "Yakin ingin melakukan checkout transaksi ini?",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#198754', // Hijau
+                    cancelButtonColor: '#6c757d',  // Abu-abu
+                    confirmButtonText: 'Ya, Checkout!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        }
+
+        // Konfirmasi Batalkan Transaksi
+        const btnBatal = document.querySelector('.btn-batal');
+        if (btnBatal) {
+            btnBatal.addEventListener('click', function (e) {
+                e.preventDefault();
+                const form = document.getElementById('form-batal');
+
+                Swal.fire({
+                    title: 'Batalkan Transaksi?',
+                    text: "Semua produk di keranjang akan dihapus!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545', // Merah
+                    cancelButtonColor: '#6c757d',  // Abu-abu
+                    confirmButtonText: 'Ya, Batalkan!',
+                    cancelButtonText: 'Tidak'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        }
+    });
+</script>
 
 @endsection

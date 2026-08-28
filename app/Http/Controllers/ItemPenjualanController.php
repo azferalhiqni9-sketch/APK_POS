@@ -50,7 +50,7 @@ class ItemPenjualanController extends Controller
         $product = Produk::findOrFail($request->product_id);
 
         if ($product->stok < $request->quantity) {
-            return back()->with('errors', 'Produk stok tidak mencukupi');
+            return back()->with('swal_error', 'Stok produk ' . $product->nama . ' tidak mencukupi! Sisa stok: ' . $product->stok);
         }
 
         DB::transaction(function () use ($request, $sale, $product) {
@@ -113,7 +113,7 @@ class ItemPenjualanController extends Controller
         $selisih = $request->quantity - $itempenjualan->kuantitas;
 
         if ($selisih > 0 && $produk->stok < $selisih) {
-            return back()->with('errors', 'Stok tidak mencukupi');
+            return back()->with('swal_error', 'Stok produk ' . $produk->nama . ' tidak mencukupi untuk penambahan tersebut!');
         }
 
         DB::transaction(function () use ($request, $itempenjualan, $selisih) {
