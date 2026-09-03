@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class ProdukController extends Controller
 {
@@ -151,32 +152,37 @@ class ProdukController extends Controller
     /**
      * Menghapus data produk dari database.
      */
+   /**
+     * Menghapus data produk dari database.
+     */
     public function destroy(Produk $produk)
     {
-        // Memeriksa hak akses hapus produk
         $this->authorize('delete', $produk);
 
-        try {
-            // Hapus file foto terkait dari storage jika ada
+        DB::transaction(function () use ($produk) {
+            
+            // 1. Hapus semua item penjualan terkait secara otomatis & perbarui total transaksinya
+            foreach ($produk->itemPenjualan as $item) {
+                $sale = $item->penjualan;
+
+                $item->delete();
+
+                if ($sale) {
+                    $sale->update([
+                        'total_pembayaran' => $sale->itemPenjualan()->sum('subtotal')
+                    ]);
+                }
+            }
+
+            // 2. Hapus foto produk dari storage jika ada
             if ($produk->foto && Storage::disk('public')->exists($produk->foto)) {
                 Storage::disk('public')->delete($produk->foto);
             }
 
-            // Hapus data produk dari database
+            // 3. Hapus produknya
             $produk->delete();
+        });
 
-            return redirect()->route('produk.index')
-                ->with('success', 'Product deleted successfully.');
-
-        } catch (QueryException $e) {
-            // Menangani error jika data gagal dihapus karena masih terikat relasi database (foreign key constraint)
-            if ($e->getCode() == '23000') {
-                return redirect()->route('produk.index')
-                    ->with('error', 'Gagal menghapus! Produk ini sudah memiliki riwayat transaksi penjualan.');
-            }
-
-            return redirect()->route('produk.index')
-                ->with('error', 'Terjadi kesalahan pada sistem database.');
-        }
+        return redirect()->route('produk.index')->with('success', 'Produk berhasil dihapus.');
     }
 }
