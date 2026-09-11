@@ -41,8 +41,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        // Mengambil semua data role (misal: Admin/Kasir) untuk pilihan di form
-        $roles = Role::all();
+        // Mengambil data role dan menyaring agar nama role tidak duplikat
+        $roles = Role::all()->unique('name');
         
         // Membuka view form tambah user
         return view('users.create', compact('roles'));
@@ -83,8 +83,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        // Mengambil data role dan data user yang akan diedit
-        $roles = Role::all();
+        // Mengambil data role unik dan data user yang akan diedit
+        $roles = Role::all()->unique('name');
         return view('users.edit', compact('user', 'roles'));
     }
 
@@ -118,16 +118,16 @@ class UserController extends Controller
      */
    public function destroy(User $user)
    {
-       // Cek pengaman: apakah user ini punya relasi data transaksi penjualan
-       if ($user->penjualan()->exists()) {
-           // Jika punya, batalkan hapus dan kembalikan pesan error
-           return back()->with('error', 'User tidak dapat dihapus karena memiliki riwayat transaksi penjualan.');
-       }
+        // Cek pengaman: apakah user ini punya relasi data transaksi penjualan
+        if ($user->penjualan()->exists()) {
+            // Jika punya, batalkan hapus dan kembalikan pesan error
+            return back()->with('error', 'User tidak dapat dihapus karena memiliki riwayat transaksi penjualan.');
+        }
 
-       // Jika aman dan tidak ada transaksi terkait, hapus user
-       $user->delete();
+        // Jika aman dan tidak ada transaksi terkait, hapus user
+        $user->delete();
 
-       // Kembalikan ke halaman sebelumnya dengan pesan sukses
-       return back()->with('success', 'User berhasil dihapus.');
+        // Kembalikan ke halaman sebelumnya dengan pesan sukses
+        return back()->with('success', 'User berhasil dihapus.');
    }
 }
