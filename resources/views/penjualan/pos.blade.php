@@ -131,7 +131,7 @@
                                 <h4 class="fw-bold text-dark mb-0">Rp {{ number_format($sale->total_pembayaran) }}</h4>
                             </div>
 
-                            {{-- Form Checkout dengan Tombol Metode Pembayaran & Kembalian --}}
+                            {{-- Form Checkout --}}
                             <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" id="form-checkout">
                                 @csrf
                                 @method('PUT')
@@ -147,6 +147,7 @@
                                                 <i class="bi bi-cash-coin me-1"></i> Cash
                                             </button>
                                         </div>
+
                                         <div class="col-6">
                                             <button type="button" class="btn btn-outline-primary w-100 py-2 payment-btn" data-value="QRIS">
                                                 <i class="bi bi-qr-code me-1"></i> QRIS
@@ -155,7 +156,7 @@
                                     </div>
                                 </div>
 
-                                {{-- Input Uang Diterima (Hanya tampil jika memilih CASH) --}}
+                                {{-- Section Cash (Hanya tampil jika memilih CASH) --}}
                                 <div class="mb-3" id="cash-section" style="display: none;">
                                     <label class="form-label small fw-semibold text-muted">Uang Diterima (Cash)</label>
                                     <input type="number" name="uang_bayar" id="uang_bayar" class="form-control bg-white shadow-sm" placeholder="Masukkan jumlah uang...">
@@ -166,12 +167,18 @@
                                     </div>
                                 </div>
 
+                                {{-- Section QRIS (Hanya tampil jika memilih QRIS) --}}
+                                <div class="mb-3 text-center p-3 bg-white rounded border shadow-sm" id="qris-section" style="display: none;">
+                                    <label class="form-label small fw-semibold text-muted d-block mb-2">Scan QRIS untuk Pembayaran</label>
+                                    <img src="{{ asset('imges/Barcode.jpeg') }}" alt="QRIS Barcode" class="img-fluid rounded border p-2 bg-white" style="max-width: 200px;">
+                                </div>
+
                                 <button type="button" class="btn btn-success w-100 py-2 fw-semibold shadow-sm btn-checkout {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                                     <i class="bi bi-check-circle me-1"></i> Checkout
                                 </button>
                             </form>
 
-                            {{-- Form Batalkan Transaksi dengan SweetAlert2 --}}
+                            {{-- Form Batalkan Transaksi --}}
                             @can('delete', $sale)
                             <form action="{{ route('penjualan.destroy', $sale->id) }}" method="POST" class="mt-2" id="form-batal">
                                 @csrf
@@ -211,6 +218,7 @@
         const paymentBtns = document.querySelectorAll('.payment-btn');
         const paymentMethodInput = document.getElementById('payment_method');
         const cashSection = document.getElementById('cash-section');
+        const qrisSection = document.getElementById('qris-section');
         const inputUangBayar = document.getElementById('uang_bayar');
         const textKembalian = document.getElementById('text-kembalian');
         const totalTagihan = {{ $sale->total_pembayaran ?? 0 }};
@@ -229,12 +237,18 @@
 
                 if (selectedValue === 'CASH') {
                     cashSection.style.display = 'block';
+                    qrisSection.style.display = 'none';
                     inputUangBayar.setAttribute('required', 'required');
-                } else {
+                } else if (selectedValue === 'QRIS') {
                     cashSection.style.display = 'none';
+                    qrisSection.style.display = 'block';
                     inputUangBayar.removeAttribute('required');
                     inputUangBayar.value = '';
                     textKembalian.innerText = 'Rp 0';
+                } else {
+                    cashSection.style.display = 'none';
+                    qrisSection.style.display = 'none';
+                    inputUangBayar.removeAttribute('required');
                 }
             });
         });
