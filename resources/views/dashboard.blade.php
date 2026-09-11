@@ -1,14 +1,16 @@
+{{-- 1. LAYOUT INHERITANCE: Memanggil kerangka utama tampilan dari layouts/app.blade.php --}}
 @extends('layouts.app')
 
+{{-- 2. DYNAMIC TITLE: Mengisi judul halaman di tab browser --}}
 @section('title', 'Dashboard Ringkasan')
 
+{{-- 3. CONTENT SECTION: Menampung seluruh elemen visual dan data dashboard --}}
 @section('content')
 <div style="max-width: 1200px; width: 100%; margin: 0 auto; padding: 20px 20px 40px 20px;">
     
-    {{-- Kotak Utama Pembungkus Dashboard (Agar tidak terlihat polos dan lebih rapi) --}}
     <div style="background: white; border-radius: 12px; border: 1px solid #dee2e6; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 30px;">
         
-        {{-- Header Title & Date --}}
+        {{-- HEADER DASHBOARD & FORMAT TANGGAL LOKAL --}}
         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #f1f3f5; padding-bottom: 20px; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
             <div>
                 <h2 style="font-weight: 700; color: #212529; margin: 0; font-size: 24px;">Ringkasan Hari Ini</h2>
@@ -16,26 +18,32 @@
             </div>
             <div style="background: #f8f9fa; border: 1px solid #ced4da; padding: 8px 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
                 <span style="color: #495057; font-weight: 500; font-size: 14px;">
+                    {{-- CARBON DATE FORMATTING: Menampilkan tanggal hari ini dalam format bahasa Indonesia (Contoh: Senin, 12 Mei 2026) --}}
                     📅 {{ $tanggalHariIni->translatedFormat('l, d F Y') }}
                 </span>
             </div>
         </div>
 
+        {{-- 4. AUTHORIZATION / POLICY CHECK: Membatasi agar modul ringkasan keuangan hanya bisa dilihat oleh User dengan hak akses (Role) tertentu (misal: Admin/Owner) --}}
         @can('viewAny', App\Models\User::class)
-            {{-- Today's Sales Section --}}
+            
+            {{-- PENJUALAN HARI INI --}}
             <div style="margin-bottom: 30px;">
                 <h4 style="font-size: 15px; font-weight: 700; color: #495057; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;">
                     📊 Today's Sales
                 </h4>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
                     
+                    {{-- Kartu Total Nilai Penjualan --}}
                     <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border: 1px solid #e9ecef; border-left: 4px solid #0d6efd;">
                         <span style="color: #6c757d; font-size: 12px; font-weight: 600; text-transform: uppercase;">Total Nilai Penjualan Hari Ini</span>
                         <h3 style="color: #212529; font-weight: 700; margin: 10px 0 0 0; font-size: 22px;">
+                            {{-- NUMBER FORMAT: Mengubah angka biasa menjadi format mata uang Rupiah (misal: 150000 -> 150.000) --}}
                             Rp {{ number_format($ringkasan['total_penjualan'], 0, ',', '.') }}
                         </h3>
                     </div>
 
+                    {{-- Kartu Jumlah Transaksi --}}
                     <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border: 1px solid #e9ecef; border-left: 4px solid #198754;">
                         <span style="color: #6c757d; font-size: 12px; font-weight: 600; text-transform: uppercase;">Jumlah Transaksi Hari Ini</span>
                         <h3 style="color: #212529; font-weight: 700; margin: 10px 0 0 0; font-size: 22px;">
@@ -46,7 +54,7 @@
                 </div>
             </div>
 
-            {{-- Cash & Payment Status Section --}}
+            {{-- METODE PEMBAYARAN --}}
             <div style="margin-bottom: 30px;">
                 <h4 style="font-size: 15px; font-weight: 700; color: #495057; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;">
                     💳 Cash & Payment Status
@@ -75,16 +83,16 @@
 
                 </div>
             </div>
-        @endcan
+        @endcan {{-- Penutup pengecekan hak akses --}}
 
-        {{-- Critical Inventory Status --}}
+        {{-- STATUS STOK INVENTARIS --}}
         <div style="margin-bottom: 30px;">
             <h4 style="font-size: 15px; font-weight: 700; color: #495057; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;">
                 ⚠️ Critical Inventory Status
             </h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
                 
-                {{-- Produk Rendah Stok --}}
+                {{-- TABEL PRODUK RENDAH STOK --}}
                 <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border: 1px solid #e9ecef;">
                     <h5 style="font-size: 14px; font-weight: 700; color: #333; margin-bottom: 15px;">Daftar Produk Rendah Stok</h5>
                     <div style="overflow-x: auto;">
@@ -97,8 +105,10 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                {{-- 5. FORELSE LOOP WITH PAGINATION NUMBERING: Perulangan data array/collection dengan fitur fallback jika data kosong --}}
                                 @forelse ($produkStokRendah as $index => $produk)
                                     <tr>
+                                        {{-- FORMULA NOMOR PAGINATION: Agar nomor urut tabel tetap berlanjut ke halaman selanjutnya --}}
                                         <td style="padding: 10px; border-bottom: 1px solid #f1f3f5; color: #6c757d;">{{ $produkStokRendah->firstItem() + $index }}</td>
                                         <td style="padding: 10px; border-bottom: 1px solid #f1f3f5; font-weight: 500; color: #212529;">{{ $produk->nama }}</td>
                                         <td style="padding: 10px; border-bottom: 1px solid #f1f3f5; text-align: center;">
@@ -106,6 +116,7 @@
                                         </td>
                                     </tr>
                                 @empty
+                                    {{-- Tampilan jika array $produkStokRendah kosong --}}
                                     <tr>
                                         <td colspan="3" style="padding: 20px; text-align: center; color: #6c757d;">
                                             ✅ Seluruh produk berada dalam kondisi stok aman.
@@ -115,12 +126,13 @@
                             </tbody>
                         </table>
                     </div>
+                    {{-- 6. PAGINATION LINKS: Menampilkan tombol navigasi halaman (Previous/Next) bawaan Laravel --}}
                     <div style="margin-top: 15px;">
                         {{ $produkStokRendah->links() }}
                     </div>
                 </div>
 
-                {{-- Produk Habis Stok --}}
+                {{-- TABEL PRODUK HABIS STOK --}}
                 <div style="background: #f8f9fa; border-radius: 8px; padding: 20px; border: 1px solid #e9ecef;">
                     <h5 style="font-size: 14px; font-weight: 700; color: #333; margin-bottom: 15px;">Produk Habis Stok</h5>
                     <div style="overflow-x: auto;">
@@ -135,6 +147,7 @@
                             <tbody>
                                 @forelse ($produkStokHabis as $produk)
                                     <tr>
+                                        {{-- LOOP ITERATION: Penomoran otomatis baris (1, 2, 3...) bawaan Blade --}}
                                         <td style="padding: 10px; border-bottom: 1px solid #f1f3f5; color: #6c757d;">{{ $loop->iteration }}</td>
                                         <td style="padding: 10px; border-bottom: 1px solid #f1f3f5; font-weight: 500; color: #212529;">{{ $produk->nama }}</td>
                                         <td style="padding: 10px; border-bottom: 1px solid #f1f3f5; text-align: center;">
@@ -159,7 +172,7 @@
             </div>
         </div>
 
-        {{-- Best Seller Products --}}
+        {{-- TABEL PRODUK TERLARIS --}}
         <div>
             <h4 style="font-size: 15px; font-weight: 700; color: #495057; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 0.5px;">
                 🔥 Best Seller Products
