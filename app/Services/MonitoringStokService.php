@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\Produk;
 
-class MonitoringStokservice
+class MonitoringStokService
 {
     public function produkStokRendah(int $batas = 5, int $perPage = 5)
     {

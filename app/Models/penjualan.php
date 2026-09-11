@@ -8,14 +8,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Penjualan extends Model
 {
     use HasFactory;
-
+    
     protected $table = 'penjualan';
     
     protected $fillable = [
         'user_id',
-        'total_pembayaran',
+        'status',
         'metode_pembayaran',
-        'status'
+        'total_pembayaran',
+        'uang_bayar',
+        'kembalian'
     ];
 
     public function user()

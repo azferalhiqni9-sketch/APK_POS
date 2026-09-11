@@ -74,6 +74,24 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Informasi Pembayaran Tunai (Uang Bayar & Kembalian) --}}
+                @if($sale->metode_pembayaran === 'CASH')
+                <div class="row g-3 mt-1">
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 bg-light border-0">
+                            <span class="d-block text-muted small fw-bold text-uppercase mb-1">Uang Diterima (Cash)</span>
+                            <span class="fw-bold text-dark fs-6">Rp {{ number_format($sale->uang_bayar ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 rounded-3 bg-light border-0">
+                            <span class="d-block text-muted small fw-bold text-uppercase mb-1">Uang Kembalian</span>
+                            <span class="fw-bold text-success fs-6">Rp {{ number_format($sale->kembalian ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
 

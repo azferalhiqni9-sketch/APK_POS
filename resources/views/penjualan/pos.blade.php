@@ -43,6 +43,7 @@
                                 <form method="POST" action="{{ route('itempenjualan.store') }}" class="row g-2 align-items-center bg-white border rounded-3 p-2 shadow-sm m-0">
                                     @csrf
                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="penjualan_id" value="{{ $sale->id }}">
 
                                     <div class="col-7">
                                         <button type="submit"
@@ -130,16 +131,40 @@
                                 <h4 class="fw-bold text-dark mb-0">Rp {{ number_format($sale->total_pembayaran) }}</h4>
                             </div>
 
-                            {{-- Form Checkout dengan SweetAlert2 --}}
+                            {{-- Form Checkout dengan Tombol Metode Pembayaran & Kembalian --}}
                             <form method="POST" action="{{ route('penjualan.update', $sale->id) }}" id="form-checkout">
                                 @csrf
                                 @method('PUT')
 
-                                <select name="payment_method" class="form-select mb-3 bg-white shadow-sm">
-                                    <option value="">Pilih Pembayaran</option>
-                                    <option value="CASH">Cash</option>
-                                    <option value="QRIS">QRIS</option>
-                                </select>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-muted">Metode Pembayaran</label>
+                                    
+                                    <input type="hidden" name="payment_method" id="payment_method" value="" required>
+
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-outline-primary w-100 py-2 payment-btn" data-value="CASH">
+                                                <i class="bi bi-cash-coin me-1"></i> Cash
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-outline-primary w-100 py-2 payment-btn" data-value="QRIS">
+                                                <i class="bi bi-qr-code me-1"></i> QRIS
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Input Uang Diterima (Hanya tampil jika memilih CASH) --}}
+                                <div class="mb-3" id="cash-section" style="display: none;">
+                                    <label class="form-label small fw-semibold text-muted">Uang Diterima (Cash)</label>
+                                    <input type="number" name="uang_bayar" id="uang_bayar" class="form-control bg-white shadow-sm" placeholder="Masukkan jumlah uang...">
+                                    
+                                    <div class="mt-2 p-2 bg-white rounded border d-flex justify-content-between align-items-center">
+                                        <span class="small text-muted fw-semibold">Kembalian:</span>
+                                        <span id="text-kembalian" class="fw-bold text-danger fs-6">Rp 0</span>
+                                    </div>
+                                </div>
 
                                 <button type="button" class="btn btn-success w-100 py-2 fw-semibold shadow-sm btn-checkout {{ $sale->status === 'COMPLETED' ? 'disabled' : '' }}">
                                     <i class="bi bi-check-circle me-1"></i> Checkout
@@ -168,7 +193,7 @@
     </div>
 </div>
 
-{{-- Script SweetAlert2 untuk Halaman POS --}}
+{{-- Script SweetAlert2, Tombol Pembayaran & Kalkulator Kembalian Otomatis --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -183,6 +208,55 @@
             });
         @endif
 
+        const paymentBtns = document.querySelectorAll('.payment-btn');
+        const paymentMethodInput = document.getElementById('payment_method');
+        const cashSection = document.getElementById('cash-section');
+        const inputUangBayar = document.getElementById('uang_bayar');
+        const textKembalian = document.getElementById('text-kembalian');
+        const totalTagihan = {{ $sale->total_pembayaran ?? 0 }};
+
+        // Logika Tombol Metode Pembayaran
+        paymentBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                paymentBtns.forEach(b => b.classList.remove('active', 'btn-primary', 'text-white'));
+                paymentBtns.forEach(b => b.classList.add('btn-outline-primary'));
+
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('active', 'btn-primary', 'text-white');
+
+                const selectedValue = this.getAttribute('data-value');
+                paymentMethodInput.value = selectedValue;
+
+                if (selectedValue === 'CASH') {
+                    cashSection.style.display = 'block';
+                    inputUangBayar.setAttribute('required', 'required');
+                } else {
+                    cashSection.style.display = 'none';
+                    inputUangBayar.removeAttribute('required');
+                    inputUangBayar.value = '';
+                    textKembalian.innerText = 'Rp 0';
+                }
+            });
+        });
+
+        // Hitung Kembalian Otomatis
+        if (inputUangBayar) {
+            inputUangBayar.addEventListener('input', function() {
+                let uangBayar = parseFloat(this.value) || 0;
+                let kembalian = uangBayar - totalTagihan;
+
+                if (kembalian >= 0) {
+                    textKembalian.innerText = 'Rp ' + kembalian.toLocaleString('id-ID');
+                    textKembalian.classList.remove('text-danger');
+                    textKembalian.classList.add('text-success');
+                } else {
+                    textKembalian.innerText = 'Uang Kurang (Rp ' + Math.abs(kembalian).toLocaleString('id-ID') + ')';
+                    textKembalian.classList.remove('text-success');
+                    textKembalian.classList.add('text-danger');
+                }
+            });
+        }
+
         // Konfirmasi Checkout
         const btnCheckout = document.querySelector('.btn-checkout');
         if (btnCheckout) {
@@ -195,8 +269,8 @@
                     text: "Yakin ingin melakukan checkout transaksi ini?",
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonColor: '#198754', // Hijau
-                    cancelButtonColor: '#6c757d',  // Abu-abu
+                    confirmButtonColor: '#198754',
+                    cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Ya, Checkout!',
                     cancelButtonText: 'Batal'
                 }).then((result) => {
@@ -219,8 +293,8 @@
                     text: "Semua produk di keranjang akan dihapus!",
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#dc3545', // Merah
-                    cancelButtonColor: '#6c757d',  // Abu-abu
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
                     confirmButtonText: 'Ya, Batalkan!',
                     cancelButtonText: 'Tidak'
                 }).then((result) => {
