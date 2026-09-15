@@ -9,15 +9,23 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\JenisController;
 
+// Route Guest (Sebelum Login)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'index'])->name('login');
     Route::post('/login', [AuthController::class, 'auth'])->name('login.post');
 });
 
+// Route Auth (Setelah Login)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    // Route Halaman About (Disesuaikan namanya menjadi about.index)
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about.index');
+
+    // Route Khusus Admin
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('users');
         Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
@@ -27,12 +35,12 @@ Route::middleware('auth')->group(function () {
         Route::delete('/users/destroy/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     });
 
+    // Route Admin & Kasir
     Route::middleware('role:admin,kasir')->group(function () {
         Route::resource('/produk', ProdukController::class)->names('produk');
         Route::resource('/penjualan', PenjualanController::class);
         Route::resource('/itempenjualan', ItemPenjualanController::class);
         
-        // Diperbaiki agar parameter routenya menjadi 'jenis', bukan 'jeni'
         Route::resource('jenis', JenisController::class)->parameters([
             'jenis' => 'jenis'
         ]);

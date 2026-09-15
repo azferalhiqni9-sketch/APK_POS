@@ -58,7 +58,11 @@
                             <i class="bi bi-cart-check me-1"></i> Penjualan
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="btn {{ Request::is('about*') ? 'btn-primary fw-bold shadow-sm' : 'btn-light text-dark' }}"
+                            href="{{ route('about.index') }}">
+                            <i class="bi bi-info-circle me-1"></i> About
+                        </a>
                 </ul>
 
                 {{-- Logout Button --}}
